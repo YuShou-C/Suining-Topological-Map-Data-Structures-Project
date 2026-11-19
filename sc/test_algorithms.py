@@ -3,7 +3,7 @@ import unittest
 from algorithms import Graph, rebuild_path, sort_paths
 from hash_table import PathHashTable
 from models import Edge
-from sample_data import EDGES, SPOTS
+from sample_data import CONNECTIONS, EDGES, SPOTS
 
 
 class AlgorithmTests(unittest.TestCase):
@@ -41,6 +41,9 @@ class AlgorithmTests(unittest.TestCase):
         self.assertEqual(set(graph.adjacency), set(range(1, 11)))
         self.assertTrue(graph.find_all_paths(1, 10))
         self.assertEqual({edge.method for edge in EDGES}, {"步行", "公交车", "自驾"})
+        for start, end, _ in CONNECTIONS:
+            methods = {edge.method for edge in EDGES if edge.start == start and edge.end == end}
+            self.assertEqual(methods, {"步行", "公交车", "自驾"})
 
 
 if __name__ == "__main__":

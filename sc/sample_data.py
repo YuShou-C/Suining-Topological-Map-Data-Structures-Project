@@ -15,23 +15,38 @@ SPOTS = [
 ]
 
 
+CONNECTIONS = [
+    (1, 5, 2.4),
+    (1, 6, 1.8),
+    (1, 7, 2.0),
+    (2, 5, 3.1),
+    (2, 7, 2.8),
+    (2, 4, 3.8),
+    (3, 1, 5.2),
+    (3, 6, 4.0),
+    (4, 8, 2.0),
+    (5, 7, 1.2),
+    (5, 6, 2.6),
+    (6, 7, 1.6),
+    (2, 8, 1.7),
+    (7, 8, 2.1),
+    (7, 9, 3.0),
+    (6, 9, 2.7),
+    (8, 10, 2.4),
+    (9, 10, 4.1),
+]
+
+
+def _three_mode_edges(start: int, end: int, distance: float) -> list[Edge]:
+    return [
+        Edge(start, end, "步行", distance, round(distance * 15), 0),
+        Edge(start, end, "公交车", round(distance * 1.08, 1), round(distance * 5 + 5), 2),
+        Edge(start, end, "自驾", round(distance * 1.03, 1), max(3, round(distance * 2.5)), max(3, round(distance * 1.5))),
+    ]
+
+
 EDGES = [
-    Edge(1, 5, "公交车", 2.4, 12, 2),
-    Edge(1, 6, "步行", 1.8, 24, 0),
-    Edge(1, 7, "自驾", 2.0, 7, 4),
-    Edge(2, 5, "公交车", 3.1, 16, 2),
-    Edge(2, 7, "步行", 2.8, 35, 0),
-    Edge(2, 4, "公交车", 3.8, 18, 2),
-    Edge(3, 1, "自驾", 5.2, 12, 5),
-    Edge(3, 6, "公交车", 4.0, 22, 2),
-    Edge(4, 8, "步行", 2.0, 25, 0),
-    Edge(5, 7, "步行", 1.2, 15, 0),
-    Edge(5, 6, "公交车", 2.6, 14, 2),
-    Edge(6, 7, "步行", 1.6, 20, 0),
-    Edge(2, 8, "步行", 1.7, 22, 0),
-    Edge(7, 8, "公交车", 2.1, 11, 2),
-    Edge(7, 9, "自驾", 3.0, 9, 4),
-    Edge(6, 9, "公交车", 2.7, 15, 2),
-    Edge(8, 10, "公交车", 2.4, 13, 2),
-    Edge(9, 10, "自驾", 4.1, 12, 5),
+    edge
+    for start, end, distance in CONNECTIONS
+    for edge in _three_mode_edges(start, end, distance)
 ]

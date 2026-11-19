@@ -21,14 +21,28 @@ class Graph:
     def edges(self) -> list[Edge]:
         return [edge for values in self.adjacency.values() for edge in values]
 
-    def find_all_paths(self, start: int, end: int) -> list[PathInfo]:
+    def find_all_paths(
+        self, start: int, end: int, include_transport_variants: bool = True
+    ) -> list[PathInfo]:
         result: list[PathInfo] = []
 
         def dfs(current: int, visited: set[int], spots: list[int], edges: list[Edge]) -> None:
             if current == end:
                 result.append(PathInfo(start, end, spots[:], edges[:]))
                 return
-            for edge in self.adjacency.get(current, []):
+            edges_to_visit = self.adjacency.get(current, [])
+            if not include_transport_variants:
+                best_edges: dict[int, Edge] = {}
+                for edge in edges_to_visit:
+                    old_edge = best_edges.get(edge.end)
+                    if old_edge is None or (
+                        edge.distance,
+                        edge.time,
+                        edge.cost,
+                    ) < (old_edge.distance, old_edge.time, old_edge.cost):
+                        best_edges[edge.end] = edge
+                edges_to_visit = list(best_edges.values())
+            for edge in edges_to_visit:
                 if edge.end in visited:
                     continue
                 visited.add(edge.end)
